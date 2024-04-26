@@ -17,13 +17,19 @@ object Utils {
         "J9" to "ibm",
         "OpenJDK" to "openjdk")
 
-    fun generateAliases(javaVersion: String): List<String> {
-        val provider = detectProvider(javaVersion)
-        val platform = detectPlatform(javaVersion)
-        val version = detectVersion(javaVersion)
-        val shortVersion = detectShortVersion(version)
-        return listOf(shortVersion, version, "$provider$platform-$version")
-    }
+    fun generateAliases(javaVersion: String): Set<String> =
+        mutableSetOf<String>().apply {
+            val provider = detectProvider(javaVersion)
+            val platform = detectPlatform(javaVersion)
+            val version = detectVersion(javaVersion)
+
+            add("$provider$platform-$version")
+            add(version)
+            add(detectShortVersion(version))
+            if (!version.startsWith("1")) {
+                add(detectShortestVersion(version))
+            }
+        }.toSet()
 
     private fun detectProvider(javaVersion: String): String {
         for (provider in PROVIDERS) {
@@ -45,9 +51,13 @@ object Utils {
         javaVersion.lines()
             .first { it.contains("version") }
             .replaceBefore('"', "")
+            .replaceAfterLast('"', "")
             .replace("\"", "")
             .replace('_', '.')
 
     private fun detectShortVersion(version: String): String =
-        "([0-9]\\.[0-9]).*".toRegex().matchEntire(version)?.groupValues?.get(1) ?: ""
+        "([0-9]+\\.[0-9]+).*".toRegex().matchEntire(version)?.groupValues?.get(1) ?: ""
+
+    private fun detectShortestVersion(version: String): String =
+        "([0-9]+)\\.+.*".toRegex().matchEntire(version)?.groupValues?.get(1) ?: ""
 }
