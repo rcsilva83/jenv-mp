@@ -26,7 +26,7 @@ object Utils {
             add("$provider$platform-$version")
             add(version)
             add(detectShortVersion(version))
-            if (!version.startsWith("1")) {
+            if (!version.startsWith("1.")) {
                 add(detectShortestVersion(version))
             }
         }.toSet()
