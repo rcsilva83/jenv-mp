@@ -1,7 +1,9 @@
+package utils
+
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class UtilsTest {
+class AliasesGeneratorTest {
 
     @Test
     fun `Should generate 3 aliases for Java 8 Temurin 64-bits`() {
@@ -13,7 +15,7 @@ class UtilsTest {
 
         val expected = setOf("1.8", "1.8.0.412", "temurin64-1.8.0.412")
 
-        assertEquals(expected, Utils.generateAliases(javaVersion))
+        assertEquals(expected, AliasesGenerator.generateAliases(javaVersion))
     }
 
     @Test
@@ -26,7 +28,7 @@ class UtilsTest {
 
         val expected = setOf("11", "11.0", "11.0.23", "corretto64-11.0.23")
 
-        assertEquals(expected, Utils.generateAliases(javaVersion))
+        assertEquals(expected, AliasesGenerator.generateAliases(javaVersion))
     }
 
     @Test
@@ -39,7 +41,7 @@ class UtilsTest {
 
         val expected = setOf("17", "17.0", "17.0.11", "temurin32-17.0.11")
 
-        assertEquals(expected, Utils.generateAliases(javaVersion))
+        assertEquals(expected, AliasesGenerator.generateAliases(javaVersion))
     }
 
 }

@@ -1,4 +1,6 @@
-object Utils {
+package utils
+
+object AliasesGenerator {
     private const val DEFAULT_PROVIDER = "other"
     private val PROVIDERS = linkedMapOf(
         "HotSpot" to "oracle",
