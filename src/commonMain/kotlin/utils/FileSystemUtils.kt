@@ -13,15 +13,31 @@ object FileSystemUtils {
 
     @OptIn(ExperimentalNativeApi::class)
     fun createLink(targetDirPath: Path, linkPath: Path) {
-        if (Platform.isWindows()) {
-            // TODO Use system call
-            val command = "mklink /J $linkPath $targetDirPath"
-            val result = system(command)
-            if (result == -1) {
-                perror("Error creating junction")
-            }
+        if (FileSystem.SYSTEM.exists(linkPath)) {
+            println("${linkPath.name} already present, skip installation")
         } else {
-            FileSystem.SYSTEM.createSymlink(linkPath, targetDirPath)
+            ensureParentDirExists(linkPath)
+            if (Platform.isWindows()) {
+                val linkPathWindows = linkPath.toString().replace('/', '\\')
+                val targetDirPathWindows = targetDirPath.toString().replace('/', '\\')
+                // TODO Use system call
+                val command = "mklink /J $linkPathWindows $targetDirPathWindows"
+                val result = system(command)
+                if (result == -1) {
+                    perror("Error creating junction")
+                }
+            } else {
+                FileSystem.SYSTEM.createSymlink(linkPath, targetDirPath)
+            }
+        }
+    }
+
+    private fun ensureParentDirExists(targetDirPath: Path) {
+        targetDirPath.parent?.let {
+            if (!FileSystem.SYSTEM.exists(it)) {
+                println("Creating dir $it")
+                FileSystem.SYSTEM.createDirectories(it)
+            }
         }
     }
 }
