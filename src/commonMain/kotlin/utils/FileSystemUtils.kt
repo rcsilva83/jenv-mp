@@ -21,11 +21,11 @@ object FileSystemUtils {
             if (Platform.isWindows()) {
                 val linkPathWindows = linkPath.toString().replace('/', '\\')
                 val targetDirPathWindows = targetDirPath.toString().replace('/', '\\')
-                // TODO Use system call
                 val command = "mklink /J $linkPathWindows $targetDirPathWindows"
-                val result = system(command)
-                if (result == -1) {
-                    perror("Error creating junction")
+                try {
+                    CommandExecuter.executeCommand(command)
+                } catch (e: Error) {
+                    perror("Error creating junction: $e")
                 }
             } else {
                 FileSystem.SYSTEM.createSymlink(linkPath, targetDirPath)
