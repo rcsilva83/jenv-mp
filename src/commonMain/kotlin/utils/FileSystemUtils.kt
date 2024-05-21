@@ -12,9 +12,10 @@ fun Platform.isWindows() = osFamily == OsFamily.WINDOWS
 object FileSystemUtils {
 
     @OptIn(ExperimentalNativeApi::class)
-    fun createLink(targetDirPath: Path, linkPath: Path) {
-        if (FileSystem.SYSTEM.exists(linkPath)) {
+    fun createLink(targetDirPath: Path, linkPath: Path): Boolean {
+        return if (FileSystem.SYSTEM.exists(linkPath)) {
             println("${linkPath.name} already present, skip installation")
+            false
         } else {
             ensureParentDirExists(linkPath)
             if (Platform.isWindows()) {
@@ -29,13 +30,14 @@ object FileSystemUtils {
             } else {
                 FileSystem.SYSTEM.createSymlink(linkPath, targetDirPath)
             }
+            println("${linkPath.name} added")
+            true
         }
     }
 
     private fun ensureParentDirExists(targetDirPath: Path) {
         targetDirPath.parent?.let {
             if (!FileSystem.SYSTEM.exists(it)) {
-                println("Creating dir $it")
                 FileSystem.SYSTEM.createDirectories(it)
             }
         }
