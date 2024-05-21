@@ -3,7 +3,7 @@ import com.github.ajalt.clikt.core.subcommands
 
 import commands.*
 
-const val JENV_ROOT = "~/.jenv"
+const val JENV_HOME = "~/.jenv"
 
 class Jenv: CliktCommand(name="jenv") {
     override fun run() = Unit
