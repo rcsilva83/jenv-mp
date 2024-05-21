@@ -3,7 +3,6 @@ package utils
 import okio.FileSystem
 import okio.Path
 import platform.posix.perror
-import platform.posix.system
 import kotlin.experimental.ExperimentalNativeApi
 
 @OptIn(ExperimentalNativeApi::class)
